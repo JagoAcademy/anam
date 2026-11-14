@@ -1,53 +1,122 @@
-import { CLUB_INFO } from './config.js';
+import { supabase } from './config.js';
+import { formatWA } from './helper.js';
 
-const ALL_PAGES = [
-  'page-login',
-  'page-nonmember',
-  'page-admin',
-  'page-coach',
-  'page-parent'
-];
-
-window.pindahHalaman = function (targetId) {
-  ALL_PAGES.forEach((id) => {
-    const el = document.getElementById(id);
-    if (el) {
-      if (id === targetId) {
-        el.classList.remove('hidden');
-        el.classList.add('animate-fade-in');
-      } else {
-        el.classList.add('hidden');
-      }
+function tampilkanWarning(pesan) {
+  let box = document.getElementById('login-warning-box');
+  if (!box) {
+    box = document.createElement('div');
+    box.id = 'login-warning-box';
+    box.className = 'mt-3 p-3 rounded-xl bg-red-50 border border-red-300 text-red-700 text-xs font-bold leading-relaxed';
+    const passEl = document.getElementById('password') || document.getElementById('login-pass');
+    if (passEl && passEl.parentElement) {
+      passEl.parentElement.insertAdjacentElement('afterend', box);
     }
-  });
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-};
-
-export function formatWA(nomor) {
-  let clean = (nomor || '').replace(/\D/g, '');
-  if (clean.startsWith('0')) clean = '62' + clean.slice(1);
-  return clean;
+  }
+  box.innerHTML = `⚠️ ${pesan}`;
+  box.classList.remove('hidden');
 }
 
-export function formatRupiah(angka) {
-  return 'Rp ' + (parseInt(angka) || 0).toLocaleString('id-ID');
+function sembunyikanWarning() {
+  const box = document.getElementById('login-warning-box');
+  if (box) box.classList.add('hidden');
 }
 
-export function formatTanggalIndo(tgl) {
-  if (!tgl) return '-';
-  return tgl.split('-').reverse().join('/');
+function arahkanSesuaiRole(user) {
+  if (user.role === 'admin') {
+    window.pindahHalaman('page-admin');
+    if (typeof window.loadAdminDashboard === 'function') window.loadAdminDashboard();
+  } else if (user.role === 'coach') {
+    window.pindahHalaman('page-coach');
+    if (typeof window.loadCoachDashboard === 'function') window.loadCoachDashboard();
+  } else {
+    window.pindahHalaman('page-parent');
+    if (typeof window.loadParentDashboard === 'function') window.loadParentDashboard();
+  }
 }
 
-window.chatAdmin = function (pesan = 'Halo Admin Anam Swimming Course, saya ingin tanya info kursus renang.') {
-  window.open(`https://wa.me/${CLUB_INFO.waAdmin}?text=${encodeURIComponent(pesan)}`, '_blank');
+window.prosesLogin = async function (event) {
+  if (event && typeof event.preventDefault === 'function') {
+    event.preventDefault();
+  }
+  sembunyikanWarning();
+
+  const userEl = document.getElementById('username') || document.getElementById('login-user');
+  const passEl = document.getElementById('password') || document.getElementById('login-pass');
+
+  if (!userEl || !passEl) {
+    const msg = 'Form input username/password tidak ditemukan di index.html!';
+    tampilkanWarning(msg);
+    return alert(msg);
+  }
+
+  const rawInput = userEl.value.trim();
+  const password = passEl.value.trim();
+
+  if (!rawInput || !password) {
+    tampilkanWarning('Username / No. HP dan Password wajib diisi!');
+    return;
+  }
+
+  const btn = document.querySelector('button[onclick*="prosesLogin"]') || document.querySelector('#page-login button[type="submit"]');
+  const teksAsli = btn ? btn.innerText : 'Masuk';
+  if (btn) {
+    btn.innerText = '⏳ Mengecek akun...';
+    btn.disabled = true;
+  }
+
+  try {
+    const cleanUser = rawInput.replace(/[,()]/g, '');
+    const hpFormat = formatWA(cleanUser);
+
+    let filter = `username.eq.${cleanUser}`;
+    if (hpFormat.length >= 9) filter += `,no_wa.eq.${hpFormat}`;
+
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .or(filter)
+      .eq('password', password)
+      .maybeSingle();
+
+    if (error) {
+      tampilkanWarning(`Error Database (${error.code || 'DB'}): ${error.message}`);
+      return;
+    }
+
+    if (!data) {
+      tampilkanWarning('Akun tidak ditemukan atau password salah. (Pastikan tabel users sudah diisi & RLS Supabase tidak memblokir akses baca).');
+      return;
+    }
+
+    localStorage.setItem('anam_user', JSON.stringify(data));
+    arahkanSesuaiRole(data);
+  } catch (err) {
+    tampilkanWarning(`Error Sistem: ${err.message}`);
+  } finally {
+    if (btn) {
+      btn.innerText = teksAsli;
+      btn.disabled = false;
+    }
+  }
 };
 
-window.kirimPendaftaranWA = function () {
-  const nama = document.getElementById('reg-nama').value.trim();
-  const usia = document.getElementById('reg-usia').value.trim();
-  const program = document.getElementById('reg-program').value;
-  const wa = document.getElementById('reg-wa').value.trim();
-
-  const teks = `Halo Admin Anam Swimming Course, saya ingin mendaftarkan siswa baru:\n- Nama: ${nama}\n- Usia: ${usia} th\n- Program: ${program}\n- No WA: ${wa}`;
-  window.chatAdmin(teks);
+window.logout = function () {
+  localStorage.removeItem('anam_user');
+  const userEl = document.getElementById('username') || document.getElementById('login-user');
+  const passEl = document.getElementById('password') || document.getElementById('login-pass');
+  if (userEl) userEl.value = '';
+  if (passEl) passEl.value = '';
+  sembunyikanWarning();
+  window.pindahHalaman('page-login');
 };
+
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('anam_user');
+  if (saved) {
+    try {
+      arahkanSesuaiRole(JSON.parse(saved));
+    } catch {
+      localStorage.removeItem('anam_user');
+    }
+  }
+});
