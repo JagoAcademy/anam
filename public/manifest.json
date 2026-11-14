@@ -1,0 +1,15 @@
+{
+  "name": "Anam Swimming Course",
+  "short_name": "Anam Swim",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#004AAD",
+  "icons": [
+    {
+      "src": "/images/anam.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

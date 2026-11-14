@@ -1,0 +1,51 @@
+<div id="page-admin" class="hidden min-h-screen bg-slate-50">
+  <header class="bg-anam-blue text-white px-4 py-3.5 shadow-md sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <img src="/images/anam.png" alt="Logo" class="w-9 h-9 bg-white rounded-full p-0.5 object-contain" />
+        <div>
+          <div class="font-extrabold text-sm leading-tight">Admin Panel</div>
+          <div class="text-[10px] text-sky-200">Anam Swimming Course</div>
+        </div>
+      </div>
+      <button onclick="logout()" class="px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-xs font-bold transition">
+        Keluar
+      </button>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto p-4 md:p-6 space-y-6">
+    <!-- RINGKASAN STATISTIK -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+        <div class="text-[11px] font-bold text-slate-400 uppercase">Total Siswa</div>
+        <div id="stat-siswa" class="text-2xl font-extrabold text-anam-blue mt-1">0</div>
+      </div>
+      <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+        <div class="text-[11px] font-bold text-slate-400 uppercase">Pelatih Aktif</div>
+        <div id="stat-coach" class="text-2xl font-extrabold text-anam-dark mt-1">0</div>
+      </div>
+      <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+        <div class="text-[11px] font-bold text-slate-400 uppercase">SPP Lunas</div>
+        <div id="stat-lunas" class="text-2xl font-extrabold text-emerald-600 mt-1">0</div>
+      </div>
+      <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+        <div class="text-[11px] font-bold text-slate-400 uppercase">Belum Bayar</div>
+        <div id="stat-tunggakan" class="text-2xl font-extrabold text-anam-orange mt-1">0</div>
+      </div>
+    </div>
+
+    <!-- TAB NAVIGASI MODUL -->
+    <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm">
+      <div class="flex flex-wrap gap-2 border-b border-slate-100 pb-4 mb-4">
+        <button class="px-4 py-2 rounded-xl bg-anam-blue text-white text-xs font-bold">Data Siswa</button>
+        <button class="px-4 py-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 text-xs font-bold">Jadwal & Absensi</button>
+        <button class="px-4 py-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 text-xs font-bold">Pembayaran SPP</button>
+        <button class="px-4 py-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 text-xs font-bold">Data Pelatih</button>
+      </div>
+      <div id="admin-content" class="text-sm text-slate-500 py-8 text-center">
+        Siap dihubungkan dengan tabel Supabase (Siswa, Absensi, SPP).
+      </div>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anam Swimming Course — Sistem & Portal Club</title>
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#004AAD" />
+  <link rel="icon" type="image/png" href="/images/anam.png" />
+  <link rel="apple-touch-icon" href="/images/anam.png" />
+  <script type="module" src="/src/main.js"></script>
+</head>
+<body class="bg-white text-anam-dark font-sans antialiased min-h-screen flex flex-col items-center">
+
+  <!-- ========================================== -->
+  <!-- 1. LANDING PAGE RINGKAS & LOGIN PORTAL     -->
+  <!-- ========================================== -->
+  <div id="page-login" class="h-[100dvh] md:h-auto md:min-h-screen bg-gradient-to-br from-white via-sky-50/70 to-amber-50/40 overflow-y-auto overflow-x-hidden md:overflow-visible snap-y snap-mandatory md:snap-none relative transition-all duration-300 scroll-smooth w-full">
+
+    <!-- BACKGROUND KHAS ANAM (CONCENTRIC RINGS, LANE GRID & SPARKLES) -->
+    <div class="fixed md:absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+      <!-- Pola Grid Halus Seperti Lintasan Kolam -->
+      <div class="absolute inset-0 bg-[radial-gradient(#004AAD_1px,transparent_1px)] [background-size:28px_28px] opacity-[0.04]"></div>
+
+      <!-- Cincin Konsentris (Terinspirasi Lingkaran Logo Anam) -->
+      <div class="absolute -top-36 -left-36 w-[460px] h-[460px] rounded-full border-[24px] border-anam-blue/[0.04]"></div>
+      <div class="absolute -top-20 -left-20 w-[330px] h-[330px] rounded-full border border-dashed border-anam-cyan/30"></div>
+
+      <div class="absolute -bottom-44 -right-32 w-[520px] h-[520px] rounded-full border-[32px] border-anam-cyan/[0.06]"></div>
+      <div class="absolute -bottom-24 -right-12 w-[360px] h-[360px] rounded-full border border-anam-orange/25"></div>
+
+      <!-- Cahaya Ambient Biru & Oranye -->
+      <div class="absolute top-1/4 right-1/4 w-72 h-72 bg-anam-cyan/10 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-1/4 left-1/3 w-64 h-64 bg-anam-orange/10 rounded-full blur-3xl"></div>
+
+      <!-- Aksen Kilau Bintang 4 Sudut (Elemen Khas Logo Anam) -->
+      <svg class="absolute top-16 right-[14%] w-7 h-7 text-anam-cyan/40" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" />
+      </svg>
+      <svg class="absolute bottom-24 left-[10%] w-5 h-5 text-anam-orange/45" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" />
+      </svg>
+      <svg class="absolute top-[42%] left-[46%] hidden md:block w-4 h-4 text-anam-blue/25" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" />
+      </svg>
+    </div>
+
+    <!-- SPLIT CONTAINER -->
+    <div class="max-w-5xl w-full mx-auto flex flex-col md:flex-row gap-0 md:gap-14 items-stretch md:items-center z-10 relative md:min-h-screen px-4">
+
+      <!-- BAGIAN KIRI: HERO RINGKAS -->
+      <div class="w-full md:w-1/2 h-[100dvh] md:h-auto shrink-0 flex flex-col justify-center snap-always snap-center md:snap-align-none text-center md:text-left px-3 relative z-10">
+
+        <div class="inline-flex mx-auto md:mx-0 items-center gap-2 bg-white/90 backdrop-blur-sm border border-anam-blue/15 text-anam-blue px-3.5 py-1 rounded-full text-[11px] font-bold tracking-wide shadow-sm mb-4">
+          <span class="w-2 h-2 rounded-full bg-anam-orange animate-pulse"></span> ANAM SWIMMING COURSE
+        </div>
+
+        <img src="/images/anam.png" alt="Logo Anam Swimming Course" class="w-28 md:w-36 mx-auto md:mx-0 mb-4 drop-shadow-sm" />
+
+        <h1 class="text-3xl md:text-4xl font-extrabold text-anam-dark leading-tight mb-2">
+          Latihan Terarah, <br />
+          <span class="text-anam-blue">Prestasi</span> <span class="text-anam-orange">Maksimal.</span>
+        </h1>
+
+        <p class="text-slate-600 text-xs md:text-sm leading-relaxed max-w-sm mx-auto md:mx-0 mb-6">
+          Portal resmi informasi kursus renang, jadwal latihan, absensi, dan administrasi anggota <strong>Anam Swimming Course</strong>.
+        </p>
+
+        <!-- 2 TOMBOL UTAMA -->
+        <div class="flex flex-row gap-2.5 max-w-sm mx-auto md:mx-0 w-full mb-6">
+          <button onclick="document.getElementById('login-section').scrollIntoView({behavior: 'smooth'})" class="flex-1 bg-anam-blue hover:bg-blue-800 text-white font-bold py-3 px-3 rounded-xl shadow-md shadow-anam-blue/20 transition-all text-xs md:text-sm flex items-center justify-center gap-1.5 active:scale-95">
+            🔐 Member & Admin
+          </button>
+          <button onclick="pindahHalaman('page-nonmember')" class="flex-1 bg-white hover:bg-amber-50 text-anam-dark font-bold py-3 px-3 rounded-xl shadow-sm transition-all text-xs md:text-sm flex items-center justify-center gap-1.5 active:scale-95 border border-slate-200">
+            📋 Info & Daftar
+          </button>
+        </div>
+
+        <!-- INFO SINGKAT (3 KOLOM) -->
+        <div class="grid grid-cols-3 gap-2 border-t border-slate-200/80 pt-4 max-w-sm mx-auto md:mx-0">
+          <div class="bg-white/70 md:bg-transparent rounded-xl p-2 md:p-0">
+            <strong class="text-base md:text-lg font-extrabold text-anam-blue block leading-tight">4 Gaya</strong>
+            <span class="text-[10px] text-slate-500 font-semibold uppercase">Dasar & Prestasi</span>
+          </div>
+          <div class="bg-white/70 md:bg-transparent rounded-xl p-2 md:p-0">
+            <strong class="text-base md:text-lg font-extrabold text-anam-orange block leading-tight">Privat</strong>
+            <span class="text-[10px] text-slate-500 font-semibold uppercase">& Reguler Club</span>
+          </div>
+          <div class="bg-white/70 md:bg-transparent rounded-xl p-2 md:p-0">
+            <strong class="text-base md:text-lg font-extrabold text-anam-dark block leading-tight">Terpadu</strong>
+            <span class="text-[10px] text-slate-500 font-semibold uppercase">Absensi & SPP</span>
+          </div>
+        </div>
+
+        <!-- PANAH SCROLL KE LOGIN (KHUSUS HP) -->
+        <div class="md:hidden absolute bottom-6 right-4 z-30 animate-bounce cursor-pointer" onclick="document.getElementById('login-section').scrollIntoView({behavior: 'smooth'})">
+          <div class="bg-anam-blue text-white p-2.5 rounded-full shadow-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- BAGIAN KANAN: LOGIN PORTAL -->
+      <div id="login-section" class="w-full md:w-1/2 h-[100dvh] md:min-h-0 shrink-0 flex flex-col justify-center snap-always snap-center md:snap-align-none px-2 relative z-20">
+        <div class="bg-white/95 backdrop-blur-md px-7 pb-7 pt-10 rounded-[2rem] shadow-xl shadow-anam-blue/[0.07] w-full max-w-md mx-auto border border-slate-200/70 relative overflow-hidden">
+
+          <!-- GARIS WARNA LOGO DI ATAS CARD -->
+          <div class="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-anam-blue via-anam-cyan to-anam-orange"></div>
+
+          <div class="text-center mb-6">
+            <img src="/images/anam.png" alt="Logo Anam" class="w-16 mx-auto mb-2" />
+            <h2 class="text-xl font-extrabold text-anam-dark">Portal Administrasi</h2>
+            <p class="text-slate-500 text-xs mt-0.5">Masuk sebagai Admin, Pelatih, atau Wali Siswa</p>
+          </div>
+
+          <form onsubmit="event.preventDefault(); prosesLogin();" class="flex flex-col gap-3.5">
+            <div>
+              <label class="block text-[10px] font-bold text-slate-500 mb-1 ml-1 uppercase tracking-wider">Username / No. HP</label>
+              <input type="text" id="username" required class="w-full p-3 bg-slate-50/80 border border-slate-200 rounded-xl focus:outline-none focus:border-anam-blue focus:ring-2 focus:ring-anam-cyan/20 transition-all text-sm font-medium" placeholder="Masukkan username..." />
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-500 mb-1 ml-1 uppercase tracking-wider">Password</label>
+              <input type="password" id="password" required class="w-full p-3 bg-slate-50/80 border border-slate-200 rounded-xl focus:outline-none focus:border-anam-blue focus:ring-2 focus:ring-anam-cyan/20 transition-all text-sm font-medium" placeholder="Masukkan password..." />
+            </div>
+
+            <button type="submit" class="w-full bg-anam-blue hover:bg-blue-800 text-white font-bold p-3 rounded-xl shadow-lg shadow-anam-blue/25 transition-all active:scale-95 mt-1 text-sm">
+              MASUK KE SISTEM
+            </button>
+          </form>
+
+          <div class="flex items-center my-5 opacity-70">
+            <div class="flex-grow border-t border-slate-200"></div>
+            <span class="px-3 text-[10px] text-slate-400 font-bold uppercase tracking-widest">Atau</span>
+            <div class="flex-grow border-t border-slate-200"></div>
+          </div>
+
+          <div class="flex flex-col gap-2.5">
+            <button onclick="pindahHalaman('page-nonmember')" class="w-full bg-slate-50 hover:bg-slate-100 text-anam-dark font-bold p-2.5 rounded-xl transition-all text-xs border border-slate-200 flex items-center justify-center gap-2">
+              📋 Pendaftaran Siswa Baru
+            </button>
+            <button onclick="chatAdmin()" class="w-full bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold p-2.5 rounded-xl transition-all text-xs border border-emerald-200 flex items-center justify-center gap-2">
+              💬 Hubungi Admin (WhatsApp)
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================================== -->
+  <!-- CONTAINER HALAMAN & ROLE MODULAR      -->
+  <!-- ===================================== -->
+  <div id="nonmember-container" class="w-full"></div>
+  <div id="admin-container" class="w-full"></div>
+  <div id="coach-container" class="w-full"></div>
+  <div id="parent-container" class="w-full"></div>
+  <div id="modal-container"></div>
+
+</body>
+</html>

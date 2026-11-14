@@ -1,0 +1,55 @@
+<div id="page-nonmember" class="hidden min-h-screen bg-slate-50 p-4 md:p-8">
+  <div class="max-w-lg mx-auto bg-white rounded-3xl shadow-lg border border-slate-100 p-6 md:p-8 relative overflow-hidden">
+    <div class="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-anam-blue via-anam-cyan to-anam-orange"></div>
+
+    <div class="flex items-center justify-between mb-6">
+      <button onclick="pindahHalaman('page-login')" class="text-xs font-bold text-slate-500 hover:text-anam-blue">
+        ← Kembali
+      </button>
+      <img src="/images/anam.png" alt="Logo" class="w-10 h-10 object-contain" />
+    </div>
+
+    <h2 class="text-xl font-extrabold text-anam-dark">Pendaftaran Siswa Baru</h2>
+    <p class="text-xs text-slate-500 mt-1 mb-5">Isi data calon siswa untuk diteruskan ke Admin Anam Swimming Course.</p>
+
+    <form onsubmit="event.preventDefault(); kirimPendaftaranWA();" class="space-y-3.5">
+      <div>
+        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Nama Lengkap Siswa</label>
+        <input type="text" id="reg-nama" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm" placeholder="Contoh: Budi Santoso" />
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Usia (Tahun)</label>
+          <input type="number" id="reg-usia" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm" placeholder="7" />
+        </div>
+        <div>
+          <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Program Kelas</label>
+          <select id="reg-program" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm">
+            <option value="Reguler Pemula">Reguler Pemula</option>
+            <option value="Pembinaan / Prestasi">Pembinaan / Prestasi</option>
+            <option value="Privat 1-on-1">Privat 1-on-1</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">No. WhatsApp Wali</label>
+        <input type="tel" id="reg-wa" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm" placeholder="0812xxxx" />
+      </div>
+
+      <button type="submit" class="w-full bg-anam-orange hover:bg-amber-600 text-white font-bold py-3 rounded-xl shadow-md transition text-sm mt-2">
+        Kirim Pendaftaran via WhatsApp
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+  window.kirimPendaftaranWA = function() {
+    const nama = document.getElementById('reg-nama').value;
+    const usia = document.getElementById('reg-usia').value;
+    const program = document.getElementById('reg-program').value;
+    const wa = document.getElementById('reg-wa').value;
+    const teks = `Halo Admin Anam Swimming Course, saya ingin mendaftarkan siswa baru:\n- Nama: ${nama}\n- Usia: ${usia} th\n- Program: ${program}\n- No WA: ${wa}`;
+    window.chatAdmin(teks);
+  }
+</script>
