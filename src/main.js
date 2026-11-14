@@ -6,11 +6,18 @@ import coachHtml from './components/coach.html?raw';
 import parentHtml from './components/parent.html?raw';
 import modalHtml from './components/modal.html?raw';
 
-document.getElementById('nonmember-container').innerHTML = nonmemberHtml;
-document.getElementById('admin-container').innerHTML = adminHtml;
-document.getElementById('coach-container').innerHTML = coachHtml;
-document.getElementById('parent-container').innerHTML = parentHtml;
-document.getElementById('modal-container').innerHTML = modalHtml;
+const containers = {
+  'nonmember-container': nonmemberHtml,
+  'admin-container': adminHtml,
+  'coach-container': coachHtml,
+  'parent-container': parentHtml,
+  'modal-container': modalHtml,
+};
+
+Object.entries(containers).forEach(([id, html]) => {
+  const el = document.getElementById(id);
+  if (el) el.innerHTML = html;
+});
 
 import './js/config.js';
 import './js/helper.js';
