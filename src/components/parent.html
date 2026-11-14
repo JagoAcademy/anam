@@ -1,10 +1,34 @@
-<!-- src/components/parent.html -->
-<div id="page-parent" class="hidden min-h-screen bg-slate-50 p-4">
-  <div class="max-w-4xl mx-auto bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-    <div class="flex justify-between items-center border-b pb-4 mb-4">
-      <h2 class="font-extrabold text-lg text-anam-blue">Portal Siswa & Wali</h2>
-      <button onclick="logout()" class="text-xs font-bold text-red-500">Keluar</button>
+<div id="page-parent" class="hidden min-h-screen bg-slate-50 pb-16">
+  <header class="bg-anam-blue text-white px-4 py-3.5 shadow-md sticky top-0 z-30">
+    <div class="max-w-2xl mx-auto flex items-center justify-between">
+      <div>
+        <div class="font-extrabold text-sm">Anam Swimming Course</div>
+        <div id="parent-greeting" class="text-[11px] text-sky-200">Portal Wali Siswa</div>
+      </div>
+      <button onclick="logout()" class="px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-xs font-bold">
+        Keluar
+      </button>
     </div>
-    <p class="text-sm text-slate-600">Area cek jadwal latihan, riwayat kehadiran, dan status tagihan SPP.</p>
-  </div>
+  </header>
+
+  <main class="max-w-2xl mx-auto p-4 space-y-4">
+    <!-- PILIH ANAK (JIKA LEBIH DARI 1) -->
+    <div id="parent-wrap-pilih" class="hidden bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm">
+      <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Pilih Siswa</label>
+      <select id="parent-select-anak" onchange="gantiAnakParent()" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold"></select>
+    </div>
+
+    <!-- KARTU SISA SESI -->
+    <div id="parent-card-sesi" class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm text-center">
+      <p class="text-xs text-slate-400">Memuat data siswa...</p>
+    </div>
+
+    <!-- RIWAYAT LATIHAN -->
+    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+      <h3 class="font-extrabold text-sm text-anam-dark mb-3">📋 Riwayat Latihan Terakhir</h3>
+      <div id="parent-list-histori" class="space-y-2">
+        <p class="text-xs text-slate-400 text-center py-4">Belum ada riwayat latihan.</p>
+      </div>
+    </div>
+  </main>
 </div>

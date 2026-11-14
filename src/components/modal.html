@@ -1,0 +1,179 @@
+<!-- 1. MODAL KLIK TAGIH (WHATSAPP & TOP-UP SESI) -->
+<div id="modal-tagih" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+  <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-fade-in">
+    <div class="bg-gradient-to-r from-anam-blue to-anam-cyan p-4 text-white flex justify-between items-center">
+      <div>
+        <h3 class="font-extrabold text-base">💳 Kirim Tagihan Latihan</h3>
+        <p class="text-[11px] text-sky-100">Otomatis format pesan ke WhatsApp Wali</p>
+      </div>
+      <button onclick="tutupModal('modal-tagih')" class="text-2xl font-bold leading-none">&times;</button>
+    </div>
+
+    <div class="p-5 space-y-3 text-xs">
+      <input type="hidden" id="tagih-id-murid" />
+      <input type="hidden" id="tagih-sisa-sekarang" />
+
+      <div class="grid grid-cols-2 gap-2.5">
+        <div>
+          <label class="block font-bold text-slate-500 uppercase text-[10px] mb-1">Nama Murid</label>
+          <input type="text" id="tagih-nama" readonly class="w-full p-2.5 bg-slate-100 border border-slate-200 rounded-xl font-bold text-anam-dark" />
+        </div>
+        <div>
+          <label class="block font-bold text-slate-500 uppercase text-[10px] mb-1">No. WA Ortu</label>
+          <input type="text" id="tagih-wa" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold" placeholder="0812..." />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2.5">
+        <div>
+          <label class="block font-bold text-slate-500 uppercase text-[10px] mb-1">Program</label>
+          <input type="text" id="tagih-program" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold" />
+        </div>
+        <div>
+          <label class="block font-bold text-slate-500 uppercase text-[10px] mb-1">Paket Top-Up Sesi</label>
+          <select id="tagih-tambah-sesi" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold">
+            <option value="4">+4 Sesi (1 Bulan)</option>
+            <option value="8">+8 Sesi (2 Bulan)</option>
+            <option value="1">+1 Sesi (Visit)</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label class="block font-bold text-slate-500 uppercase text-[10px] mb-1">Nominal Tagihan (Rp)</label>
+        <input type="number" id="tagih-nominal" class="w-full p-3 bg-amber-50/60 border border-amber-300 rounded-xl font-extrabold text-base text-anam-dark" value="350000" />
+      </div>
+
+      <div class="pt-2 flex flex-col gap-2">
+        <button onclick="prosesKirimTagihanWA()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-md transition text-xs">
+          📲 Kirim Tagihan via WhatsApp
+        </button>
+        <button onclick="prosesLunasTopupSesi()" class="w-full bg-anam-blue hover:bg-blue-800 text-white font-bold py-3 rounded-xl shadow-md transition text-xs">
+          ✅ Sudah Bayar / Lunas (+Tambah Sesi)
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2. MODAL TAMBAH / EDIT MURID -->
+<div id="modal-murid" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+  <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-fade-in">
+    <div class="bg-anam-blue p-4 text-white flex justify-between items-center">
+      <h3 id="judul-modal-murid" class="font-extrabold text-base">Tambah Murid Baru</h3>
+      <button onclick="tutupModal('modal-murid')" class="text-2xl font-bold leading-none">&times;</button>
+    </div>
+
+    <form onsubmit="event.preventDefault(); simpanDataMurid();" class="p-5 space-y-3 text-xs">
+      <input type="hidden" id="murid-edit-id" />
+      <div>
+        <label class="block font-bold text-slate-500 uppercase text-[10px] mb-1">Nama Lengkap Murid *</label>
+        <input type="text" id="murid-nama" required class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl" placeholder="Contoh: Kenzo Pratama" />
+      </div>
+      <div class="grid grid-cols-2 gap-2.5">
+        <div>
+          <label class="block font-bold text-slate-500 uppercase text-[10px] mb-1">Nama Panggilan</label>
+          <input type="text" id="murid-panggilan" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl" placeholder="Kenzo" />
+        </div>
+        <div>
+          <label class="block font-bold text-slate-500 uppercase text-[10px] mb-1">No. WA Ortu *</label>
+          <input type="tel" id="murid-wa" required class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl" placeholder="0812xxxx" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2.5">
+        <div>
+          <label class="block font-bold text-slate-500 uppercase text-[10px] mb-1">Program</label>
+          <select id="murid-program" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+            <option value="Reguler">Reguler</option>
+            <option value="Privat">Privat</option>
+            <option value="Prestasi">Prestasi</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-500 uppercase text-[10px] mb-1">Sisa Sesi</label>
+          <input type="number" id="murid-sesi" value="4" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2.5">
+        <div>
+          <label class="block font-bold text-slate-500 uppercase text-[10px] mb-1">Batas Expired</label>
+          <input type="date" id="murid-expired" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl" />
+        </div>
+        <div>
+          <label class="block font-bold text-slate-500 uppercase text-[10px] mb-1">Tautkan Akun Ortu</label>
+          <select id="murid-parent-id" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+            <option value="">-- Belum Ada --</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit" class="w-full bg-anam-blue hover:bg-blue-800 text-white font-bold py-3 rounded-xl shadow-md mt-2">
+        💾 Simpan Data Murid
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- 3. MODAL BUAT AKUN LOGIN (COACH / WALI) -->
+<div id="modal-akun" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+  <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-fade-in">
+    <div class="bg-anam-dark p-4 text-white flex justify-between items-center">
+      <h3 class="font-extrabold text-base">🔑 Buat Akun Coach / Wali</h3>
+      <button onclick="tutupModal('modal-akun')" class="text-2xl font-bold leading-none">&times;</button>
+    </div>
+
+    <form onsubmit="event.preventDefault(); simpanAkunBaru();" class="p-5 space-y-3 text-xs">
+      <div>
+        <label class="block font-bold text-slate-500 uppercase text-[10px] mb-1">Role Akses</label>
+        <select id="akun-role" onchange="togglePilihMuridAkun()" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold">
+          <option value="parent">Wali Murid (Parent)</option>
+          <option value="coach">Pelatih (Coach)</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <div>
+        <label class="block font-bold text-slate-500 uppercase text-[10px] mb-1">Nama Lengkap *</label>
+        <input type="text" id="akun-nama" required class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl" placeholder="Contoh: Coach Anam / Bunda Kenzo" />
+      </div>
+      <div class="grid grid-cols-2 gap-2.5">
+        <div>
+          <label class="block font-bold text-slate-500 uppercase text-[10px] mb-1">No. HP Login</label>
+          <input type="tel" id="akun-wa" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl" placeholder="0812xxxx" />
+        </div>
+        <div>
+          <label class="block font-bold text-slate-500 uppercase text-[10px] mb-1">Username Login</label>
+          <input type="text" id="akun-username" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl" placeholder="opsional jika pakai HP" />
+        </div>
+      </div>
+      <div>
+        <label class="block font-bold text-slate-500 uppercase text-[10px] mb-1">Password *</label>
+        <input type="text" id="akun-password" required value="123456" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold" />
+      </div>
+      <div id="wrap-taut-murid">
+        <label class="block font-bold text-slate-500 uppercase text-[10px] mb-1">Langsung Tautkan ke Murid (Opsional)</label>
+        <select id="akun-murid-id" class="w-full p-2.5 bg-amber-50 border border-amber-200 rounded-xl">
+          <option value="">-- Pilih Murid --</option>
+        </select>
+      </div>
+
+      <button type="submit" class="w-full bg-anam-orange hover:bg-amber-600 text-white font-bold py-3 rounded-xl shadow-md mt-2">
+        ✅ Buat Akun Sekarang
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- 4. MODAL INFO REKENING PEMBAYARAN -->
+<div id="modal-rekening" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+  <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden animate-fade-in">
+    <div class="bg-anam-blue p-4 text-white flex justify-between items-center">
+      <h3 class="font-extrabold text-sm">🏦 Info Rekening di Pesan Tagihan</h3>
+      <button onclick="tutupModal('modal-rekening')" class="text-2xl font-bold leading-none">&times;</button>
+    </div>
+    <div class="p-5 space-y-3 text-xs">
+      <p class="text-slate-500">Teks ini otomatis disisipkan di bagian bawah pesan WhatsApp saat Admin klik tombol <b>Tagih</b>:</p>
+      <textarea id="input-info-rekening" rows="4" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs"></textarea>
+      <button onclick="simpanInfoRekening()" class="w-full bg-anam-blue text-white font-bold py-2.5 rounded-xl">💾 Simpan Info Rekening</button>
+    </div>
+  </div>
+</div>

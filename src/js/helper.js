@@ -8,7 +8,6 @@ const ALL_PAGES = [
   'page-parent'
 ];
 
-// Navigasi antar halaman SPA
 window.pindahHalaman = function (targetId) {
   ALL_PAGES.forEach((id) => {
     const el = document.getElementById(id);
@@ -24,17 +23,31 @@ window.pindahHalaman = function (targetId) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-// Redirect WhatsApp Admin
+export function formatWA(nomor) {
+  let clean = (nomor || '').replace(/\D/g, '');
+  if (clean.startsWith('0')) clean = '62' + clean.slice(1);
+  return clean;
+}
+
+export function formatRupiah(angka) {
+  return 'Rp ' + (parseInt(angka) || 0).toLocaleString('id-ID');
+}
+
+export function formatTanggalIndo(tgl) {
+  if (!tgl) return '-';
+  return tgl.split('-').reverse().join('/');
+}
+
 window.chatAdmin = function (pesan = 'Halo Admin Anam Swimming Course, saya ingin tanya info kursus renang.') {
-  const url = `https://wa.me/${CLUB_INFO.waAdmin}?text=${encodeURIComponent(pesan)}`;
-  window.open(url, '_blank');
+  window.open(`https://wa.me/${CLUB_INFO.waAdmin}?text=${encodeURIComponent(pesan)}`, '_blank');
 };
 
-// Helper format Rupiah
-export function formatRupiah(angka) {
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0
-  }).format(angka || 0);
-}
+window.kirimPendaftaranWA = function () {
+  const nama = document.getElementById('reg-nama').value.trim();
+  const usia = document.getElementById('reg-usia').value.trim();
+  const program = document.getElementById('reg-program').value;
+  const wa = document.getElementById('reg-wa').value.trim();
+
+  const teks = `Halo Admin Anam Swimming Course, saya ingin mendaftarkan siswa baru:\n- Nama: ${nama}\n- Usia: ${usia} th\n- Program: ${program}\n- No WA: ${wa}`;
+  window.chatAdmin(teks);
+};

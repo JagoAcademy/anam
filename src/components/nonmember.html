@@ -25,9 +25,9 @@
         <div>
           <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Program Kelas</label>
           <select id="reg-program" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm">
-            <option value="Reguler Pemula">Reguler Pemula</option>
-            <option value="Pembinaan / Prestasi">Pembinaan / Prestasi</option>
-            <option value="Privat 1-on-1">Privat 1-on-1</option>
+            <option value="Reguler">Reguler</option>
+            <option value="Privat">Privat</option>
+            <option value="Prestasi">Prestasi</option>
           </select>
         </div>
       </div>
@@ -42,14 +42,3 @@
     </form>
   </div>
 </div>
-
-<script>
-  window.kirimPendaftaranWA = function() {
-    const nama = document.getElementById('reg-nama').value;
-    const usia = document.getElementById('reg-usia').value;
-    const program = document.getElementById('reg-program').value;
-    const wa = document.getElementById('reg-wa').value;
-    const teks = `Halo Admin Anam Swimming Course, saya ingin mendaftarkan siswa baru:\n- Nama: ${nama}\n- Usia: ${usia} th\n- Program: ${program}\n- No WA: ${wa}`;
-    window.chatAdmin(teks);
-  }
-</script>

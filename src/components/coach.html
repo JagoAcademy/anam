@@ -1,10 +1,23 @@
-<!-- src/components/coach.html -->
-<div id="page-coach" class="hidden min-h-screen bg-slate-50 p-4">
-  <div class="max-w-4xl mx-auto bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-    <div class="flex justify-between items-center border-b pb-4 mb-4">
-      <h2 class="font-extrabold text-lg text-anam-blue">Dashboard Pelatih — Anam</h2>
-      <button onclick="logout()" class="text-xs font-bold text-red-500">Keluar</button>
+<div id="page-coach" class="hidden min-h-screen bg-slate-50 pb-16">
+  <header class="bg-anam-blue text-white px-4 py-3.5 shadow-md sticky top-0 z-30">
+    <div class="max-w-2xl mx-auto flex items-center justify-between">
+      <div>
+        <div class="font-extrabold text-sm">Portal Pelatih — Anam</div>
+        <div id="coach-greeting" class="text-[11px] text-sky-200">Absensi & Catatan Latihan</div>
+      </div>
+      <button onclick="logout()" class="px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-xs font-bold">
+        Keluar
+      </button>
     </div>
-    <p class="text-sm text-slate-600">Area absensi kelompok latihan dan input evaluasi gaya renang siswa.</p>
-  </div>
+  </header>
+
+  <main class="max-w-2xl mx-auto p-4 space-y-4">
+    <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm">
+      <input type="text" id="coach-cari-murid" oninput="renderMuridCoach()" placeholder="🔍 Cari nama murid untuk absen..." class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-anam-blue" />
+    </div>
+
+    <div id="coach-list-murid" class="space-y-2.5">
+      <p class="text-center text-xs text-slate-400 py-8">Memuat daftar murid...</p>
+    </div>
+  </main>
 </div>
