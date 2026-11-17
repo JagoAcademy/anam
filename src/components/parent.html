@@ -12,22 +12,19 @@
   </header>
 
   <main class="max-w-2xl mx-auto p-4 space-y-4">
-    <!-- PILIH ANAK (JIKA LEBIH DARI 1) -->
     <div id="parent-wrap-pilih" class="hidden bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm">
       <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Pilih Siswa</label>
       <select id="parent-select-anak" onchange="gantiAnakParent()" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold"></select>
     </div>
 
-    <!-- KARTU SISA SESI -->
     <div id="parent-card-sesi" class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm text-center">
       <p class="text-xs text-slate-400">Memuat data siswa...</p>
     </div>
 
-    <!-- RIWAYAT LATIHAN -->
     <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-      <h3 class="font-extrabold text-sm text-anam-dark mb-3">📋 Riwayat Latihan Terakhir</h3>
-      <div id="parent-list-histori" class="space-y-2">
-        <p class="text-xs text-slate-400 text-center py-4">Belum ada riwayat latihan.</p>
+      <h3 class="font-extrabold text-sm text-anam-dark mb-3">📋 Log Assesment & Riwayat Latihan</h3>
+      <div id="parent-list-histori" class="space-y-2.5">
+        <p class="text-xs text-slate-400 text-center py-4">Belum ada riwayat latihan tercatat.</p>
       </div>
     </div>
   </main>

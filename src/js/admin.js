@@ -1,7 +1,8 @@
 import { supabase } from './config.js';
-import { formatWA, formatRupiah, formatTanggalIndo } from './helper.js';
+import { formatWA, formatRupiah, formatTanggalIndo, formatHariTanggalLengkap } from './helper.js';
 
 let daftarMuridCache = [];
+let logAdminCache = [];
 let filterAktif = 'semua';
 
 window.tutupModal = function (id) {
@@ -9,14 +10,15 @@ window.tutupModal = function (id) {
 };
 
 window.loadAdminDashboard = async function () {
-  const { data: muridData, error } = await supabase
-    .from('murid')
-    .select('*, users(nama, username, no_wa)')
-    .order('sisa_sesi', { ascending: true });
+  const [{ data: muridData, error }, { data: logData }] = await Promise.all([
+    supabase.from('murid').select('*, users(nama, username, no_wa)').order('sisa_sesi', { ascending: true }),
+    supabase.from('histori_latihan').select('*, murid(nama_murid, no_wa)').order('id', { ascending: false }).limit(60)
+  ]);
 
   if (error) return alert('Gagal memuat data murid: ' + error.message);
 
   daftarMuridCache = muridData || [];
+  logAdminCache = logData || [];
 
   const { count: jmlCoach } = await supabase
     .from('users')
@@ -29,25 +31,100 @@ window.loadAdminDashboard = async function () {
   document.getElementById('stat-tagih').innerText = perluTagih;
   document.getElementById('stat-coach').innerText = jmlCoach || 0;
 
-  window.renderDaftarMurid();
+  window.renderKontenAdmin();
 };
 
 window.setFilterMurid = function (mode) {
   filterAktif = mode;
-  const tabSemua = document.getElementById('tab-semua');
-  const tabTagih = document.getElementById('tab-tagih');
+  const tabs = {
+    semua: document.getElementById('tab-semua'),
+    tagih: document.getElementById('tab-tagih'),
+    log: document.getElementById('tab-log')
+  };
 
-  if (mode === 'semua') {
-    tabSemua.className = 'flex-1 py-2 rounded-xl bg-anam-blue text-white text-xs font-bold transition';
-    tabTagih.className = 'flex-1 py-2 rounded-xl bg-slate-100 text-slate-600 text-xs font-bold transition';
-  } else {
-    tabTagih.className = 'flex-1 py-2 rounded-xl bg-anam-orange text-white text-xs font-bold transition';
-    tabSemua.className = 'flex-1 py-2 rounded-xl bg-slate-100 text-slate-600 text-xs font-bold transition';
-  }
-  window.renderDaftarMurid();
+  Object.entries(tabs).forEach(([key, el]) => {
+    if (!el) return;
+    if (key === mode) {
+      el.className = key === 'tagih'
+        ? 'py-2 rounded-xl bg-anam-orange text-white text-[11px] font-bold transition'
+        : 'py-2 rounded-xl bg-anam-blue text-white text-[11px] font-bold transition';
+    } else {
+      el.className = 'py-2 rounded-xl bg-slate-100 text-slate-600 text-[11px] font-bold transition';
+    }
+  });
+
+  window.renderKontenAdmin();
 };
 
-window.renderDaftarMurid = function () {
+window.handleSearchAdmin = function () {
+  window.renderKontenAdmin();
+};
+
+window.renderKontenAdmin = function () {
+  if (filterAktif === 'log') {
+    renderLogAdmin();
+  } else {
+    renderDaftarMurid();
+  }
+};
+
+function renderLogAdmin() {
+  const container = document.getElementById('admin-list-murid');
+  const keyword = (document.getElementById('cari-murid')?.value || '').toLowerCase();
+
+  const filtered = logAdminCache.filter((item) => {
+    const nama = (item.nama_murid || item.murid?.nama_murid || '').toLowerCase();
+    const coach = (item.nama_coach || '').toLowerCase();
+    const materi = (item.materi || '').toLowerCase();
+    return nama.includes(keyword) || coach.includes(keyword) || materi.includes(keyword);
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = `<div class="bg-white p-8 rounded-2xl border border-slate-200 text-center text-xs text-slate-400">Belum ada log assesment latihan.</div>`;
+    return;
+  }
+
+  container.innerHTML = filtered.map((item) => {
+    const namaMurid = item.nama_murid || item.murid?.nama_murid || 'Murid';
+    const hariTanggal = formatHariTanggalLengkap(item.tanggal);
+
+    return `
+      <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm space-y-2">
+        <div class="flex items-start justify-between gap-2">
+          <div>
+            <div class="font-extrabold text-sm text-anam-dark">${namaMurid}</div>
+            <div class="text-[11px] font-bold text-anam-blue mt-0.5">📅 ${hariTanggal}</div>
+            <div class="text-[11px] text-slate-500">👨‍🏫 Nama Coach: <b>${item.nama_coach || '-'}</b></div>
+          </div>
+          <button onclick="kirimWaLogAdmin(${item.id})" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold shadow-sm shrink-0">
+            📲 Kirim WA
+          </button>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80 text-xs text-slate-700">
+          <div class="font-bold text-anam-dark mb-0.5">Latihan hari ini :</div>
+          <div class="leading-relaxed whitespace-pre-line">${item.materi || '-'}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+window.kirimWaLogAdmin = function (logId) {
+  const item = logAdminCache.find((l) => l.id === logId);
+  if (!item) return;
+
+  window.kirimLogAssesmentWA({
+    namaMurid: item.nama_murid || item.murid?.nama_murid || 'Murid',
+    noWa: item.no_wa || item.murid?.no_wa || '',
+    tanggal: item.tanggal,
+    namaCoach: item.nama_coach,
+    materi: item.materi,
+    sisaSesi: item.sisa_sesi_setelah
+  });
+};
+
+function renderDaftarMurid() {
   const container = document.getElementById('admin-list-murid');
   const keyword = (document.getElementById('cari-murid')?.value || '').toLowerCase();
 
@@ -87,7 +164,7 @@ window.renderDaftarMurid = function () {
         </div>
 
         <div class="flex items-center gap-1.5 shrink-0">
-          <button onclick="potongSatuSesi(${m.id_murid}, '${m.nama_murid}', ${sesi})" class="px-2.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-anam-dark text-[11px] font-bold transition" title="Absen / Kurangi 1 Sesi">
+          <button onclick="bukaModalAssesment(${m.id_murid})" class="px-2.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-anam-dark text-[11px] font-bold transition" title="Isi Assesment & Kurangi 1 Sesi">
             -1 Sesi
           </button>
           <button onclick="bukaModalTagih(${m.id_murid})" class="px-3 py-2 rounded-xl bg-anam-orange hover:bg-amber-600 text-white text-[11px] font-extrabold shadow-sm transition">
@@ -100,32 +177,8 @@ window.renderDaftarMurid = function () {
       </div>
     `;
   }).join('');
-};
+}
 
-// POTONG 1 SESI (ABSEN CEPAT ADMIN)
-window.potongSatuSesi = async function (idMurid, namaMurid, sesiSekarang) {
-  if (sesiSekarang <= 0) return alert(`Sisa sesi ${namaMurid} sudah 0. Klik Tagih untuk perpanjang!`);
-  if (!confirm(`Absen hadir untuk ${namaMurid}?\nSisa sesi akan berkurang dari ${sesiSekarang} menjadi ${sesiSekarang - 1}.`)) return;
-
-  const { error } = await supabase
-    .from('murid')
-    .update({ sisa_sesi: sesiSekarang - 1 })
-    .eq('id_murid', idMurid);
-
-  if (error) return alert('Gagal update sesi: ' + error.message);
-
-  await supabase.from('histori_latihan').insert([{
-    id_murid: idMurid,
-    nama_coach: 'Admin Anam',
-    materi: 'Sesi Latihan Reguler'
-  }]);
-
-  window.loadAdminDashboard();
-};
-
-// ==========================================
-// FITUR KLIK TAGIH (WA & TOP-UP SESI)
-// ==========================================
 window.bukaModalTagih = function (idMurid) {
   const m = daftarMuridCache.find((item) => item.id_murid === idMurid);
   if (!m) return;
@@ -176,7 +229,6 @@ window.prosesLunasTopupSesi = async function () {
   const tambahSesi = parseInt(document.getElementById('tagih-tambah-sesi').value) || 4;
   const totalSesiBaru = sisaLama + tambahSesi;
 
-  // Set expired otomatis +35 hari dari hari ini
   const expDate = new Date();
   expDate.setDate(expDate.getDate() + 35);
   const expISO = expDate.toISOString().split('T')[0];
@@ -193,9 +245,6 @@ window.prosesLunasTopupSesi = async function () {
   window.loadAdminDashboard();
 };
 
-// ==========================================
-// MODAL TAMBAH / EDIT MURID
-// ==========================================
 window.bukaModalMurid = async function (idMurid = null) {
   const selectParent = document.getElementById('murid-parent-id');
   const { data: parents } = await supabase.from('users').select('id, nama, no_wa, username').eq('role', 'parent');
@@ -250,9 +299,6 @@ window.simpanDataMurid = async function () {
   window.loadAdminDashboard();
 };
 
-// ==========================================
-// MODAL BUAT AKUN LOGIN (COACH / WALI / ADMIN)
-// ==========================================
 window.bukaModalAkun = function () {
   const selectMurid = document.getElementById('akun-murid-id');
   selectMurid.innerHTML = '<option value="">-- Pilih Murid --</option>' +
@@ -292,9 +338,6 @@ window.simpanAkunBaru = async function () {
   window.loadAdminDashboard();
 };
 
-// ==========================================
-// INFO REKENING PEMBAYARAN
-// ==========================================
 window.bukaModalRekening = function () {
   document.getElementById('input-info-rekening').value =
     localStorage.getItem('anam_rekening') || 'BCA a.n Anam Swimming Course\nNo. Rek: 1234567890';

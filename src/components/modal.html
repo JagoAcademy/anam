@@ -1,4 +1,68 @@
-<!-- 1. MODAL KLIK TAGIH (WHATSAPP & TOP-UP SESI) -->
+<!-- 1. MODAL ASSESMENT WAJIB SAAT KURANGI SESI (COACH / ADMIN) -->
+<div id="modal-assesment-coach" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+  <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-fade-in">
+    <div class="bg-gradient-to-r from-anam-blue to-anam-cyan p-4 text-white flex justify-between items-center">
+      <div>
+        <h3 class="font-extrabold text-base">📝 Assesment Latihan Hari Ini</h3>
+        <p id="ass-info-sesi" class="text-[11px] text-sky-100">Wajib diisi sebelum mengurangi sesi</p>
+      </div>
+      <button onclick="tutupModal('modal-assesment-coach')" class="text-2xl font-bold leading-none">&times;</button>
+    </div>
+
+    <form onsubmit="event.preventDefault(); simpanAssesmentDanPotong(false);" class="p-5 space-y-3 text-xs">
+      <input type="hidden" id="ass-id-murid" />
+      <input type="hidden" id="ass-sisa-sekarang" />
+      <input type="hidden" id="ass-no-wa" />
+
+      <div class="grid grid-cols-2 gap-2.5">
+        <div>
+          <label class="block font-bold text-slate-500 uppercase text-[10px] mb-1">Nama Murid</label>
+          <input type="text" id="ass-nama-murid" readonly class="w-full p-2.5 bg-slate-100 border border-slate-200 rounded-xl font-bold text-anam-dark" />
+        </div>
+        <div>
+          <label class="block font-bold text-slate-500 uppercase text-[10px] mb-1">Nama Coach</label>
+          <input type="text" id="ass-coach" required class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-anam-blue" />
+        </div>
+      </div>
+
+      <div>
+        <label class="block font-bold text-slate-500 uppercase text-[10px] mb-1">Hari, Tanggal Bulan Tahun</label>
+        <input type="date" id="ass-tanggal" onchange="updatePreviewHariAssesment()" required class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold" />
+        <div id="ass-preview-hari" class="text-[11px] font-bold text-anam-blue mt-1"></div>
+      </div>
+
+      <div>
+        <label class="block font-bold text-slate-500 uppercase text-[10px] mb-1">Latihan Hari Ini : *</label>
+        <div class="flex flex-wrap gap-1.5 mb-2">
+          <button type="button" onclick="pilihPresetMateri('Pengenalan air, bubble & pernapasan')" class="px-2 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-anam-blue border border-sky-200 text-[10px] font-bold">
+            + Pernapasan
+          </button>
+          <button type="button" onclick="pilihPresetMateri('Luncuran & tendangan kaki gaya bebas')" class="px-2 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-anam-blue border border-sky-200 text-[10px] font-bold">
+            + Kaki Gaya Bebas
+          </button>
+          <button type="button" onclick="pilihPresetMateri('Koordinasi tangan & ambil napas gaya bebas')" class="px-2 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-anam-blue border border-sky-200 text-[10px] font-bold">
+            + Gaya Bebas Full
+          </button>
+          <button type="button" onclick="pilihPresetMateri('Latihan gerakan kaki & tangan gaya dada')" class="px-2 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-anam-blue border border-sky-200 text-[10px] font-bold">
+            + Gaya Dada
+          </button>
+        </div>
+        <textarea id="ass-materi" rows="3" required placeholder="Tulis hasil latihan / perkembangan murid hari ini..." class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-anam-blue"></textarea>
+      </div>
+
+      <div class="pt-1 flex flex-col gap-2">
+        <button type="submit" id="btn-simpan-ass" class="w-full bg-anam-blue hover:bg-blue-800 text-white font-bold py-3 rounded-xl shadow-md transition text-xs">
+          ✅ Simpan Assesment & Kurangi 1 Sesi
+        </button>
+        <button type="button" onclick="simpanAssesmentDanPotong(true)" id="btn-simpan-wa-ass" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-md transition text-xs">
+          📲 Simpan, Kurangi Sesi & Kirim WhatsApp
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 2. MODAL KLIK TAGIH (WHATSAPP & TOP-UP SESI) -->
 <div id="modal-tagih" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
   <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-fade-in">
     <div class="bg-gradient-to-r from-anam-blue to-anam-cyan p-4 text-white flex justify-between items-center">
@@ -56,7 +120,7 @@
   </div>
 </div>
 
-<!-- 2. MODAL TAMBAH / EDIT MURID -->
+<!-- 3. MODAL TAMBAH / EDIT MURID -->
 <div id="modal-murid" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
   <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-fade-in">
     <div class="bg-anam-blue p-4 text-white flex justify-between items-center">
@@ -114,7 +178,7 @@
   </div>
 </div>
 
-<!-- 3. MODAL BUAT AKUN LOGIN (COACH / WALI) -->
+<!-- 4. MODAL BUAT AKUN LOGIN (COACH / WALI / ADMIN) -->
 <div id="modal-akun" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
   <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-fade-in">
     <div class="bg-anam-dark p-4 text-white flex justify-between items-center">
@@ -163,7 +227,7 @@
   </div>
 </div>
 
-<!-- 4. MODAL INFO REKENING PEMBAYARAN -->
+<!-- 5. MODAL INFO REKENING PEMBAYARAN -->
 <div id="modal-rekening" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
   <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden animate-fade-in">
     <div class="bg-anam-blue p-4 text-white flex justify-between items-center">

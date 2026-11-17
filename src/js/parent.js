@@ -1,7 +1,8 @@
 import { supabase } from './config.js';
-import { formatTanggalIndo } from './helper.js';
+import { formatTanggalIndo, formatHariTanggalLengkap } from './helper.js';
 
 let daftarAnakParent = [];
+let historiAnakCache = [];
 
 window.loadParentDashboard = async function () {
   const user = JSON.parse(localStorage.getItem('anam_user') || '{}');
@@ -64,27 +65,56 @@ async function tampilkanDetailAnak(anak) {
     ` : ''}
   `;
 
-  // Muat Histori Latihan
   const { data: histori } = await supabase
     .from('histori_latihan')
     .select('*')
     .eq('id_murid', anak.id_murid)
     .order('id', { ascending: false })
-    .limit(15);
+    .limit(20);
+
+  historiAnakCache = histori || [];
 
   const listHistori = document.getElementById('parent-list-histori');
-  if (!histori || histori.length === 0) {
+  if (historiAnakCache.length === 0) {
     listHistori.innerHTML = `<p class="text-xs text-slate-400 text-center py-4">Belum ada riwayat latihan tercatat.</p>`;
     return;
   }
 
-  listHistori.innerHTML = histori.map((h) => `
-    <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/70 text-xs flex justify-between items-start gap-2">
-      <div>
-        <div class="font-bold text-anam-dark">${h.materi || 'Latihan Reguler'}</div>
-        <div class="text-[11px] text-slate-500 mt-0.5">Pelatih: ${h.nama_coach || '-'}</div>
+  listHistori.innerHTML = historiAnakCache.map((h) => {
+    const hariTanggal = formatHariTanggalLengkap(h.tanggal);
+    return `
+      <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 text-xs space-y-1.5">
+        <div class="flex items-start justify-between gap-2">
+          <div>
+            <div class="font-extrabold text-anam-blue">📅 ${hariTanggal}</div>
+            <div class="text-[11px] text-slate-500">👨‍🏫 Nama Coach: <b>${h.nama_coach || '-'}</b></div>
+          </div>
+          <button onclick="bagikanLogParentWA(${h.id}, '${anak.nama_murid}')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold shrink-0">
+            📲 Bagikan WA
+          </button>
+        </div>
+
+        <div class="pt-1 border-t border-slate-200/70 text-slate-700">
+          <div class="font-bold text-anam-dark">Latihan hari ini :</div>
+          <div class="leading-relaxed whitespace-pre-line mt-0.5">${h.materi || 'Latihan Reguler'}</div>
+        </div>
       </div>
-      <span class="text-[11px] font-bold text-anam-blue shrink-0">${formatTanggalIndo(h.tanggal)}</span>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
+
+window.bagikanLogParentWA = function (logId, namaAnak) {
+  const item = historiAnakCache.find((h) => h.id === logId);
+  if (!item) return;
+
+  const hariTanggal = formatHariTanggalLengkap(item.tanggal);
+  const pesan =
+`*CATATAN LATIHAN RENANG — ${namaAnak.toUpperCase()}* 🏊‍♂️
+
+📅 *${hariTanggal}*
+👨‍🏫 *Nama Coach:* ${item.nama_coach || '-'}
+📝 *Latihan hari ini :*
+${item.materi || '-'}`;
+
+  window.open(`https://wa.me/?text=${encodeURIComponent(pesan)}`, '_blank');
+};

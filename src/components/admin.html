@@ -1,12 +1,11 @@
 <div id="page-admin" class="hidden min-h-screen bg-slate-50 pb-16">
-  <!-- HEADER -->
   <header class="bg-anam-blue text-white px-4 py-3.5 shadow-md sticky top-0 z-30">
     <div class="max-w-3xl mx-auto flex items-center justify-between">
       <div class="flex items-center gap-2.5">
         <img src="/images/anam.png" alt="Logo" class="w-9 h-9 bg-white rounded-full p-0.5 object-contain" />
         <div>
           <div class="font-extrabold text-sm leading-tight">Admin Anam</div>
-          <div class="text-[10px] text-sky-200">Kontrol Sesi & Penagihan</div>
+          <div class="text-[10px] text-sky-200">Kontrol Sesi, Log & Penagihan</div>
         </div>
       </div>
       <div class="flex items-center gap-2">
@@ -21,7 +20,6 @@
   </header>
 
   <main class="max-w-3xl mx-auto p-4 space-y-4">
-    <!-- STATISTIK RINGKAS -->
     <div class="grid grid-cols-3 gap-2.5">
       <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm">
         <div class="text-[10px] font-bold text-slate-400 uppercase">Murid Aktif</div>
@@ -37,7 +35,6 @@
       </div>
     </div>
 
-    <!-- TOMBOL AKSI TAMBAH DATA -->
     <div class="grid grid-cols-2 gap-2.5">
       <button onclick="bukaModalMurid()" class="bg-anam-blue hover:bg-blue-800 text-white font-bold py-3 px-3 rounded-xl shadow-sm text-xs flex items-center justify-center gap-1.5 transition active:scale-95">
         ➕ Tambah Murid
@@ -47,22 +44,23 @@
       </button>
     </div>
 
-    <!-- FILTER & PENCARIAN -->
     <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm space-y-3">
-      <div class="flex gap-2">
-        <button id="tab-semua" onclick="setFilterMurid('semua')" class="flex-1 py-2 rounded-xl bg-anam-blue text-white text-xs font-bold transition">
+      <div class="grid grid-cols-3 gap-1.5">
+        <button id="tab-semua" onclick="setFilterMurid('semua')" class="py-2 rounded-xl bg-anam-blue text-white text-[11px] font-bold transition">
           Semua Murid
         </button>
-        <button id="tab-tagih" onclick="setFilterMurid('tagih')" class="flex-1 py-2 rounded-xl bg-slate-100 text-slate-600 text-xs font-bold transition">
+        <button id="tab-tagih" onclick="setFilterMurid('tagih')" class="py-2 rounded-xl bg-slate-100 text-slate-600 text-[11px] font-bold transition">
           ⚠️ Perlu Ditagih
         </button>
+        <button id="tab-log" onclick="setFilterMurid('log')" class="py-2 rounded-xl bg-slate-100 text-slate-600 text-[11px] font-bold transition">
+          📋 Log Latihan
+        </button>
       </div>
-      <input type="text" id="cari-murid" oninput="renderDaftarMurid()" placeholder="🔍 Cari nama murid..." class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-anam-blue" />
+      <input type="text" id="cari-murid" oninput="handleSearchAdmin()" placeholder="🔍 Cari nama murid / coach..." class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-anam-blue" />
     </div>
 
-    <!-- LIST MURID & SISA SESI -->
     <div id="admin-list-murid" class="space-y-2.5">
-      <p class="text-center text-xs text-slate-400 py-8">Memuat data murid...</p>
+      <p class="text-center text-xs text-slate-400 py-8">Memuat data...</p>
     </div>
   </main>
 </div>
